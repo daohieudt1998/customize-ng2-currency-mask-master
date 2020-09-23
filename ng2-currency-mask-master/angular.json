@@ -1,0 +1,185 @@
+{
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "newProjectRoot": "projects",
+    "projects": {
+        "currency-mask": {
+            "projectType": "library",
+            "root": "projects/currency-mask",
+            "sourceRoot": "projects/currency-mask/src",
+            "prefix": "lib",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-ng-packagr:build",
+                    "options": {
+                        "tsConfig": "projects/currency-mask/tsconfig.lib.json",
+                        "project": "projects/currency-mask/ng-package.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "projects/currency-mask/tsconfig.lib.prod.json"
+                        }
+                    }
+                }
+            }
+        },
+        "ng2-currency-mask": {
+            "projectType": "library",
+            "root": "projects/ng2-currency-mask",
+            "sourceRoot": "projects/ng2-currency-mask/src",
+            "prefix": "lib",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-ng-packagr:build",
+                    "options": {
+                        "tsConfig": "projects/ng2-currency-mask/tsconfig.lib.json",
+                        "project": "projects/ng2-currency-mask/ng-package.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "projects/ng2-currency-mask/tsconfig.lib.prod.json"
+                        }
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "main": "projects/ng2-currency-mask/src/test.ts",
+                        "tsConfig": "projects/ng2-currency-mask/tsconfig.spec.json",
+                        "karmaConfig": "projects/ng2-currency-mask/karma.conf.js"
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": [
+                            "projects/ng2-currency-mask/tsconfig.lib.json",
+                            "projects/ng2-currency-mask/tsconfig.spec.json"
+                        ],
+                        "exclude": [
+                            "**/node_modules/**"
+                        ]
+                    }
+                }
+            }
+        },
+        "mytest": {
+            "projectType": "application",
+            "schematics": {},
+            "root": "projects/mytest",
+            "sourceRoot": "projects/mytest/src",
+            "prefix": "app",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/mytest",
+                        "index": "projects/mytest/src/index.html",
+                        "main": "projects/mytest/src/main.ts",
+                        "polyfills": "projects/mytest/src/polyfills.ts",
+                        "tsConfig": "projects/mytest/tsconfig.app.json",
+                        "aot": true,
+                        "assets": [
+                            "projects/mytest/src/favicon.ico",
+                            "projects/mytest/src/assets"
+                        ],
+                        "styles": [
+                            "projects/mytest/src/styles.css"
+                        ],
+                        "scripts": []
+                    },
+                    "configurations": {
+                        "production": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "projects/mytest/src/environments/environment.ts",
+                                    "with": "projects/mytest/src/environments/environment.prod.ts"
+                                }
+                            ],
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "extractCss": true,
+                            "namedChunks": false,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "2mb",
+                                    "maximumError": "5mb"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "6kb",
+                                    "maximumError": "10kb"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "browserTarget": "mytest:build"
+                    },
+                    "configurations": {
+                        "production": {
+                            "browserTarget": "mytest:build:production"
+                        }
+                    }
+                },
+                "extract-i18n": {
+                    "builder": "@angular-devkit/build-angular:extract-i18n",
+                    "options": {
+                        "browserTarget": "mytest:build"
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "main": "projects/mytest/src/test.ts",
+                        "polyfills": "projects/mytest/src/polyfills.ts",
+                        "tsConfig": "projects/mytest/tsconfig.spec.json",
+                        "karmaConfig": "projects/mytest/karma.conf.js",
+                        "assets": [
+                            "projects/mytest/src/favicon.ico",
+                            "projects/mytest/src/assets"
+                        ],
+                        "styles": [
+                            "projects/mytest/src/styles.css"
+                        ],
+                        "scripts": []
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": [
+                            "projects/mytest/tsconfig.app.json",
+                            "projects/mytest/tsconfig.spec.json",
+                            "projects/mytest/e2e/tsconfig.json"
+                        ],
+                        "exclude": [
+                            "**/node_modules/**"
+                        ]
+                    }
+                },
+                "e2e": {
+                    "builder": "@angular-devkit/build-angular:protractor",
+                    "options": {
+                        "protractorConfig": "projects/mytest/e2e/protractor.conf.js",
+                        "devServerTarget": "mytest:serve"
+                    },
+                    "configurations": {
+                        "production": {
+                            "devServerTarget": "mytest:serve:production"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "defaultProject": "currency-mask"
+}

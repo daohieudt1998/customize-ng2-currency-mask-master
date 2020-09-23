@@ -1,0 +1,18 @@
+{
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+    },
+    "editor.detectIndentation": false,
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4,
+    "files.exclude": {
+        ".vscode": true,
+        "**/.classpath": true,
+        "**/.factorypath": true,
+        "**/.gitignore": true,
+        "**/node_modules": true,
+    },
+    "html.format.wrapLineLength": 0,
+    "terminal.integrated.scrollback": 50000,
+    "workbench.tree.indent": 15,
+}
