@@ -89,6 +89,7 @@ export class InputHandler {
         }
 
         let keyCode = event.which || event.charCode || event.keyCode;
+
         if (keyCode == 8 || keyCode == 46 || keyCode == 63272) {
             event.preventDefault();
             let selectionRangeLength = Math.abs(this.inputService.inputSelection.selectionEnd - this.inputService.inputSelection.selectionStart);
@@ -139,8 +140,11 @@ export class InputHandler {
     }
 
     handleKeyup(event: any): void {
-        console.log(event);
-        this.inputService.fixCursorPosition();
+        //this.inputService.fixCursorPosition();
+        if (!this.htmlInputElement.value) {
+            this.inputService.addNumber(0);
+            this.inputService.movePositionCursor(1);
+        }
     }
 
     handlePaste(event: any): void {

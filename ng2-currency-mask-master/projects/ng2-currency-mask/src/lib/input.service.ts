@@ -17,8 +17,25 @@ export class InputService {
         let keyChar = String.fromCharCode(keyCode);
         let selectionStart = this.inputSelection.selectionStart;
         let selectionEnd = this.inputSelection.selectionEnd;
-        this.rawValue = this.rawValue.substring(0, selectionStart) + keyChar + this.rawValue.substring(selectionEnd, this.rawValue.length);
-        this.updateFieldValue(selectionStart + 1);
+        const lengthStringOld = this.rawValue.length;
+        if (selectionStart < lengthStringOld) {
+            this.rawValue = this.rawValue.substring(0, selectionStart) + keyChar + this.rawValue.substring(selectionEnd, this.rawValue.length);
+        }
+        if ((lengthStringOld - this.rawValue.length) > 0 &&
+            (lengthStringOld - this.rawValue.length) < this.options.precision) {
+            const countCharRomve = lengthStringOld - this.rawValue.length;
+            for (let index = 0; index < countCharRomve; index++) {
+                this.rawValue += '0';
+            }
+        }
+        let positionStartPrecision = this.rawValue.length - 1 - this.options.precision;
+        let positionEndPrecision = this.rawValue.length - 1;
+        if (selectionStart >= positionStartPrecision && selectionStart <= positionEndPrecision) {
+            this.updateFieldTypingPrecision(selectionStart, this.options.precision);
+        } else {
+            this.updateFieldValue(selectionStart + 1);
+        }
+        //this.updateFieldValue(selectionStart + 1);
     }
 
     applyMask(isNumber: boolean, rawValue: string): string {
@@ -150,6 +167,24 @@ export class InputService {
         }
 
         this.rawValue = this.rawValue.substring(0, selectionStart) + this.rawValue.substring(selectionEnd, this.rawValue.length);
+
+        // if ((selectionEnd - selectionStart) === 1) {
+        //     let positionEnd = this.rawValue.length + 1;
+        //     let positionStart = this.rawValue.length - this.options.precision + 2;
+        //     if (selectionEnd <= positionEnd && selectionEnd >= positionStart) {
+        //         this.rawValue = this.rawValue + '0';
+        //     }
+        // }
+        if (selectionEnd > selectionStart) {
+            let countCharRomve = selectionEnd - selectionStart;
+            let positionEnd = this.rawValue.length + countCharRomve;
+            let positionStart = this.rawValue.length - this.options.precision + countCharRomve + 1;
+            if (selectionEnd <= positionEnd && selectionEnd >= positionStart) {
+                for (let index = 0; index < countCharRomve; index++) {
+                    this.rawValue = this.rawValue + '0';
+                }
+            }
+        }
         this.updateFieldValue(selectionStart);
     }
 
@@ -159,9 +194,16 @@ export class InputService {
         this.inputManager.updateValueAndCursor(newRawValue, this.rawValue.length, selectionStart);
     }
 
-    updateFieldPresitionValue(precision?: number): void {
+    updateFieldPresitionValue(precision: number): void {
         let newRawValue = this.applyMask(false, this.rawValue || "");
         this.inputManager.setSelectRange(this.rawValue.length - precision, this.rawValue.length);
+    }
+
+    updateFieldTypingPrecision(selectionStart: number, precision: number) {
+        let newRawValue = this.applyMask(false, this.rawValue || "");
+        selectionStart = selectionStart == undefined ? this.rawValue.length : selectionStart;
+        this.inputManager.updateValueAndCursor(newRawValue, this.rawValue.length, selectionStart);
+        this.inputManager.setSelectRange(selectionStart + 1, this.rawValue.length);
     }
 
     updateOptions(options: any): void {
