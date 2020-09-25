@@ -89,7 +89,6 @@ export class InputService {
     }
 
     changeToNegative(): void {
-        console.log("changeToNegative");
         if (this.options.allowNegative && this.rawValue != "" && this.rawValue.charAt(0) != "-" && this.value != 0) {
             let selectionStart = this.inputSelection.selectionStart;
             this.rawValue = "-" + this.rawValue;
@@ -193,7 +192,7 @@ export class InputService {
     }
 
     updateFieldHandlePase(selectionStart?: number): void {
-        var regexp = new RegExp('^[0-9]*(\\.[0-9]{0,2})?$', 'g');
+        var regexp = new RegExp('^[0-9]*(\\.[0-9]{0,' + this.options.precision + '})?$', 'g');
         if (regexp.test(this.rawValue)) {
             const getPrecision = this.rawValue.split('.')[1];
             if (getPrecision) {
@@ -228,7 +227,6 @@ export class InputService {
         let newRawValue = this.applyMask(false, this.rawValue || "");
         selectionStart = selectionStart == undefined ? this.rawValue.length : selectionStart;
         this.inputManager.updateValueAndCursor(newRawValue, this.rawValue.length, selectionStart);
-        console.log('selectionStart:' + selectionStart);
         if (selectionStart == 0) {
             this.inputManager.setCursorAt(selectionStart + 1);
         } else {
