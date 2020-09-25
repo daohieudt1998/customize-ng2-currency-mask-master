@@ -148,13 +148,12 @@ export class InputHandler {
     }
 
     handlePaste(event: any): void {
-        console.log('handlePaste');
         if (this.isReadOnly()) {
             return;
         }
 
         setTimeout(() => {
-            this.inputService.updateFieldValue();
+            this.inputService.updateFieldHandlePase();
             this.setValue(this.inputService.value);
             this.onModelChange(this.inputService.value);
         }, 1);

@@ -31,6 +31,12 @@ export class InputService {
         let positionStartPrecision = this.rawValue.length - 1 - this.options.precision;
         let positionEndPrecision = this.rawValue.length - 1;
         if (selectionStart >= positionStartPrecision && selectionStart <= positionEndPrecision) {
+            if (this.rawValue && selectionStart == 0 && this.options.precision > 0) {
+                this.rawValue = this.rawValue + '.';
+                for (let index = 0; index < this.options.precision; index++) {
+                    this.rawValue += '0';
+                }
+            }
             this.updateFieldTypingPrecision(selectionStart, this.options.precision);
         } else {
             this.updateFieldValue(selectionStart + 1);
@@ -42,13 +48,11 @@ export class InputService {
         let { allowNegative, decimal, precision, prefix, suffix, thousands } = this.options;
         rawValue = isNumber ? new Number(rawValue).toFixed(precision) : rawValue;
         let onlyNumbers = rawValue.replace(/[^0-9]/g, "");
-
         if (!onlyNumbers) {
             return "";
         }
 
         let integerPart = onlyNumbers.slice(0, onlyNumbers.length - precision).replace(/^0*/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, thousands);
-
         if (integerPart == "") {
             integerPart = "0";
         }
@@ -188,6 +192,27 @@ export class InputService {
         this.updateFieldValue(selectionStart);
     }
 
+    updateFieldHandlePase(selectionStart?: number): void {
+        var regexp = new RegExp('^[0-9]*(\\.[0-9]{0,2})?$', 'g');
+        if (regexp.test(this.rawValue)) {
+            const getPrecision = this.rawValue.split('.')[1];
+            if (getPrecision) {
+                const countPrecision = this.options.precision - getPrecision.length;
+                for (let index = 0; index < countPrecision; index++) {
+                    this.rawValue += '0';
+                }
+            } else {
+                this.rawValue += '.';
+                for (let index = 0; index < this.options.precision; index++) {
+                    this.rawValue += '0';
+                }
+            }
+        }
+        let newRawValue = this.applyMask(false, this.rawValue || "");
+        selectionStart = selectionStart == undefined ? this.rawValue.length : selectionStart;
+        this.inputManager.updateValueAndCursor(newRawValue, this.rawValue.length, selectionStart);
+    }
+
     updateFieldValue(selectionStart?: number): void {
         let newRawValue = this.applyMask(false, this.rawValue || "");
         selectionStart = selectionStart == undefined ? this.rawValue.length : selectionStart;
@@ -203,7 +228,12 @@ export class InputService {
         let newRawValue = this.applyMask(false, this.rawValue || "");
         selectionStart = selectionStart == undefined ? this.rawValue.length : selectionStart;
         this.inputManager.updateValueAndCursor(newRawValue, this.rawValue.length, selectionStart);
-        this.inputManager.setSelectRange(selectionStart + 1, this.rawValue.length);
+        console.log('selectionStart:' + selectionStart);
+        if (selectionStart == 0) {
+            this.inputManager.setCursorAt(selectionStart + 1);
+        } else {
+            this.inputManager.setSelectRange(selectionStart + 1, this.rawValue.length);
+        }
     }
 
     updateOptions(options: any): void {

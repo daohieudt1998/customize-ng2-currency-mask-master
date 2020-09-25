@@ -8,7 +8,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     align: "right",
     allowNegative: true,
     decimal: ",",
-    precision: 3,
+    precision: 2,
     prefix: "",
     suffix: "",
     thousands: "."
